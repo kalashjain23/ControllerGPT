@@ -16,3 +16,8 @@ cd ~/ControllerGPT
 python3 main.py --key (OpenAI API Key)
 ``` 
 *Enter the required information about the topics and the goals, and you should be good to go!*
+
+## *Visuals*
+
+https://github.com/kalashjain23/ControllerGPT/assets/97672680/85c0e2ab-09b9-4412-a0df-23141ee88d36
+
