@@ -1,5 +1,8 @@
 import argparse
 import roslibpy
+import time
+
+from ai_interface import OpenAIInterface
 
 def args_factory() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
@@ -20,12 +23,20 @@ def main() -> None:
     ros_client = roslibpy.Ros(host=args.host, port=args.port)
     ros_client.run()
     
+    openai_interface = OpenAIInterface(key=args.key)
+    
     while True:
         try:
+            prompt = str(input("What do you want your robot to do? --> "))
+            print("Breaking down the goal and creating steps...")
+            messages = openai_interface.get_messages(prompt=prompt)
+            print("Done...")
+            
             publisher = roslibpy.Topic(ros_client, velocity_topic, args.topic)
             if ros_client.is_connected:
-                # msg = {linear: {x: 0.1, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.0}}
-                publisher.publish(roslibpy.Message({'linear': {'x': 0.0, 'y': 0.0, 'z': 0.0}, 'angular': {'x': 0.0, 'y': 0.0, 'z': 1.0}}))    
+                for message in messages:
+                    publisher.publish(roslibpy.Message(message))
+                    time.sleep(1)  
         except KeyboardInterrupt:
             break
         
