@@ -1,9 +1,12 @@
 # **ControllerGPT**
-#### An AI controller that can control your robot and perform the tasks that you want.  
-*Currently supports only 2 message types (Twist, String) but will be adding more.*
+**An AI controller that can control your robot and perform the tasks that you want.**  
+*Currently supports only 2 message types (Twist, String) but will be adding more.*  
+  
+This project is inspired by [ChatGPT_TurtleSim by Mhubii](https://github.com/mhubii/chatgpt_turtlesim/).
 
 ## **Prerequisites**
-You should have your own working *OpenAI API key*.
+→ You should have your own working *OpenAI API key*.  
+→ Install *roslibpy* library using `pip install roslibpy`
 
 ## **How to use**
 *Cloning the package*
