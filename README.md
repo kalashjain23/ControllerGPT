@@ -11,6 +11,11 @@ You should have your own working *OpenAI API key*.
 git clone https://github.com/kalashjain23/ControllerGPT.git
 cd ~/ControllerGPT
 ```
+*Run `rosbridge_server`*
+```
+source /opt/ros/humble/setup.bash # source your ROS distribution
+ros2 launch rosbridge_server rosbridge_websocket_launch.xml
+```
 *Running the main script along with the key*
 ```
 python3 main.py --key (OpenAI API Key)
