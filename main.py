@@ -2,12 +2,13 @@ import argparse
 import roslibpy
 import time
 
-from ai_interface import OpenAIInterface
+from ai_interface import AIInterface
 
 def args_factory() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     
     parser.add_argument('--key', type=str, required=True, help='OpenAI API key.')
+    parser.add_argument('--model', type=str, default='gpt-3.5-turbo', help='OpenAI API model.')
     parser.add_argument('--host', type=str, default='localhost', help='ROS host.')
     parser.add_argument('--port', type=int, default='9090', help='ROS port.')
     parser.add_argument('--topic', type=str, default='geometry_msgs/Twist', help='Topic for velocities of the robot.')
@@ -23,14 +24,14 @@ def main() -> None:
     ros_client = roslibpy.Ros(host=args.host, port=args.port)
     ros_client.run()
     
-    openai_interface = OpenAIInterface(key=args.key)
+    openai_interface = AIInterface(key=args.key, model=args.model)
     
     while True:
         try:
-            prompt = str(input("What do you want your robot to do? --> "))
+            prompt = str(input("\nWhat do you want your robot to do? --> "))
             print("Breaking down the goal and creating steps...")
             messages = openai_interface.get_messages(prompt=prompt)
-            print("Done...")
+            print("Done...\n")
             
             publisher = roslibpy.Topic(ros_client, velocity_topic, args.topic)
             if ros_client.is_connected:

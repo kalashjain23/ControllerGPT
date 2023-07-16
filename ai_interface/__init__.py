@@ -1,1 +1,1 @@
-from .openai_interface import OpenAIInterface
+from .openai_interface import AIInterface
