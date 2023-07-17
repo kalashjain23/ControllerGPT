@@ -1,4 +1,5 @@
 import glob
+import json
 
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import (
@@ -39,5 +40,4 @@ class AIInterface:
                 message_format=self.messages, prompt = prompt
             ).to_messages()
         ).content
-        return response
-
+        return json.loads(response)
