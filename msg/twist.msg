@@ -1,0 +1,1 @@
+{"message_type": "geometry_msgs/Twist", "format": {"linear": {"x": _, "y": _, "z": _}, 'angular': {"x": _, "y": _, "z": _}}}

@@ -1,0 +1,1 @@
+{"message_type": "std_msgs/String", "format": {"data": _}}
