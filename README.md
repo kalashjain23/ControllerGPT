@@ -1,6 +1,6 @@
 # **ControllerGPT**
 **An AI controller that can control your robot and perform the tasks that you want.**  
-*Currently supports only 2 message types (Twist, String) but will be adding more.*  
+*Currently supports few interfaces (Twist, String, Spawn) but will be adding more.*  
 
 ROS2 is interfaced via WebSockets through [rosbridge_suite](https://github.com/RobotWebTools/rosbridge_suite).  
 _LangChain_ is used to create an [interface](https://github.com/kalashjain23/ControllerGPT/tree/main/ai_interface) with ChatGPT.
@@ -32,7 +32,8 @@ python3 main.py --key (OpenAI API Key)
 ``` 
 *Now you'll be asked for the topic that you want to control and your goals*
 ```
-Enter the name of the topic that you want to control --> {/your_topic}
+Topic for publishing messages (leave blank if not any) → {/publisher_topic}
+Topic for using services (leave blank if not any) → {/service_topic}
 
 What do you want your robot to do? --> {your_prompt}
 ```
@@ -40,7 +41,7 @@ What do you want your robot to do? --> {your_prompt}
 _Some more example prompts for you to try:_
 ```
 → Move forwards for 2 seconds and then stop the robot. (on /cmd_vel)
-→ Move forwards for 2 seconds, turn to the left and then stop. (on /cmd_vel)
+→ Move forwards for 2 seconds and then stop the robot. Also, spawn another robot at (1,2). (on /turtle1/cmd_vel and /spawn)
 ```
 
 ## *Visuals*
