@@ -11,21 +11,30 @@ from langchain.prompts.chat import (
 class AIInterface:
     def __init__(self, key: str, model: str) -> None:
         self.chat = ChatOpenAI(openai_api_key=key, temperature=0.7, model=model)
-        self.messages = ""
-        txt_files = glob.glob("messages/*.txt")
-        for file in txt_files:
-            self.messages += "<" + file.split(".txt")[0][9:] + ">"
-            with open(file, 'r') as rd:
-                self.messages += rd.read()
-            self.messages += "<" + file.split(".txt")[0][9:] + ">" + "\n"
+        self.interfaces = ""
+        messages = glob.glob("msg/*.msg")
+        services = glob.glob("srv/*.srv")
+        for msg in messages:
+            delimiter = "<msg:" + msg.split(".msg")[0][4:] + ">"
+            with open(msg, 'r') as rd:
+                self.interfaces += delimiter + rd.read() + delimiter +"\n"
+        for srv in services:
+            delimiter = "<srv:" + srv.split(".srv")[0][4:] + ">"
+            with open(srv, 'r') as rd:
+                self.interfaces += delimiter + rd.read() + delimiter +"\n"
         
     def get_messages(self, prompt: str) -> str:
         system_template = ('''
-            Following are the format of the messages with their name as the tags.
-            {message_format}
+            Following are the format of the interfaces in ROS2 delimited with their respective interface_type:interface_name as the tags.
+            {interfaces_format}
 
-            Return a python list of these messages required in order to achieve the user's goals in ROS2 without any explanation. Goals will be delimited by the <prompt> tags. Do not append the names of the messages in the list. All the properties of the messages should be enclosed within double quotes.
-            Each message represents 1 second of the goal done, so add messages for every second to the list according to the goals.
+            Return a python list of these interfaces required in order to achieve the user's goals in ROS2 without any explanation. Goals will be delimited by the <prompt> tags.
+            
+            Every element in the list should be of the following format:
+            {output_format} (only consider the values in to_be_published and take respective interface_type from the given description)
+            All the properties of the messages should be enclosed within double quotes.
+            
+            Each element in the list represents 1 second of the goal done, so add interfaces for every second to the list according to the goals.
         ''')
         human_template = "<prompt>{prompt}<prompt>"
         
@@ -35,9 +44,10 @@ class AIInterface:
             [system_message_prompt, human_message_prompt]
         )
         
+        output_format = '''{"category": msg/srv, "type": interface_type, "data": to_be_published}'''
         response = self.chat(
             chat_prompt.format_prompt(
-                message_format=self.messages, prompt = prompt
+                interfaces_format=self.interfaces, output_format=output_format, prompt = prompt
             ).to_messages()
         ).content
         return json.loads(response)
