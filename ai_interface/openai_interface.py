@@ -1,5 +1,6 @@
 import glob
 import json
+from typing import Any
 
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import (
@@ -9,8 +10,10 @@ from langchain.prompts.chat import (
 )
 
 class AIInterface:
-    def __init__(self, key: str, model: str) -> None:
+    def __init__(self, key: str, model: str):
         self.chat = ChatOpenAI(openai_api_key=key, temperature=0.7, model=model)
+        
+        '''Collecting formats of all the supported ROS2 interfaces'''
         self.interfaces = ""
         messages = glob.glob("msg/*.msg")
         services = glob.glob("srv/*.srv")
@@ -23,7 +26,7 @@ class AIInterface:
             with open(srv, 'r') as rd:
                 self.interfaces += delimiter + rd.read() + delimiter +"\n"
         
-    def get_messages(self, prompt: str) -> str:
+    def get_interfaces(self, prompt: str) -> Any:
         system_template = ('''
             Following are the format of the interfaces in ROS2 delimited with their respective interface_type:interface_name as the tags.
             {interfaces_format}
@@ -44,6 +47,7 @@ class AIInterface:
             [system_message_prompt, human_message_prompt]
         )
         
+        '''Format of the response given by ChatGPT'''
         output_format = '''{"category": msg/srv, "type": interface_type, "data": to_be_published}'''
         response = self.chat(
             chat_prompt.format_prompt(
